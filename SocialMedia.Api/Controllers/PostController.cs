@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SocialMedia.Core.Interfaces;
 using SocialMedia.Infrastructure.Repositories;
 
 namespace SocialMedia.Api.Controllers
@@ -12,14 +13,25 @@ namespace SocialMedia.Api.Controllers
     [ApiController]
     public class PostController : ControllerBase
     {
-        [HttpGet]
-        public IActionResult GetPosts()
-        {
+        //crear variable local global de solo lectura para las implementaciones
 
-            var posts = new PostRepository().GetPosts();
+        private readonly IPostRepository _postRepository;
+
+
+        public PostController(IPostRepository postRepository)
+        {
+            this._postRepository = postRepository;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetPosts()
+        {
+            var posts = await _postRepository.GetPosts();
 
             return Ok(posts);
         }
+
+
 
 
     }
